@@ -735,7 +735,7 @@ int piGpioLayout (void)
   FILE *cpuFd ;
   char line [120] ;
   char *c ;
-  static int  gpioLayout = -1 ;
+  static int  gpioLayout = 2 ;
 
   if (gpioLayout != -1)	// No point checking twice
     return gpioLayout ;
@@ -951,6 +951,14 @@ void piBoardId (int *model, int *rev, int *mem, int *maker, int *warranty)
 //  unsigned int modelNum ;
 
   (void)piGpioLayout () ;	// Call this first to make sure all's OK. Don't care about the result.
+
+  *model = PI_MODEL_3;
+  *rev = PI_VERSION_2;
+  *mem = 2;
+  *maker = PI_MAKER_UNKNOWN;
+  *warranty = 1;
+  return;
+
 
   if ((cpuFd = fopen ("/proc/cpuinfo", "r")) == NULL)
     piGpioLayoutOops ("Unable to open /proc/cpuinfo") ;
@@ -2259,16 +2267,16 @@ int wiringPiSetup (void)
 
   switch (model)
   {
-    case PI_MODEL_A:	case PI_MODEL_B:
+   case PI_MODEL_A:	case PI_MODEL_B:
     case PI_MODEL_AP:	case PI_MODEL_BP:
-    case PI_ALPHA:	case PI_MODEL_CM:
-    case PI_MODEL_ZERO:	case PI_MODEL_ZERO_W:
-      piGpioBase = GPIO_PERI_BASE_OLD ;
-      break ;
+  case PI_ALPHA:	case PI_MODEL_CM:
+  case PI_MODEL_ZERO:	case PI_MODEL_ZERO_W:
+    piGpioBase = GPIO_PERI_BASE_OLD ;
+    break ;
 
-    default:
-      piGpioBase = GPIO_PERI_BASE_NEW ;
-      break ;
+  default:
+     piGpioBase = GPIO_PERI_BASE_NEW ;
+    break ;
   }
 
 // Open the master /dev/ memory control device
